@@ -45,8 +45,8 @@ function aFunction(){
     mutable variables, a while loop, and returns the answer.
 */
 function projectEulerProblem1(){
-    var sum = 0;
-    var i = 0;
+    let sum = 0;
+    let i = 0;
     while (i<1000){
         if((i%3==0)||(i%5==0)){
             sum+=i;
