@@ -82,8 +82,8 @@ function imperativeSummer(f,n){
     uses imperativeSummer and alwaysTrue to calculate the sum of all numbers
     from 1 up to (but not including) n.
 */
-function sumTo(n){
-    return n ? imperativeSummer(alwaysTrue,n):0;
+function sumTo(n) {
+    return imperativeSummer(alwaysTrue, n);
 }
 /**
     Write a function called ‘isDivisibleByThreeOrFive’ which takes a number as parameter,
@@ -110,15 +110,24 @@ function projectEulerProblem1UsingImperativeSummer(n=1000){
     for or any mutable variables (defined with let or var).
     Hint: use recursion!
 */
-function immutableSummer(f,n){
-    return n  ? n -1  + imperativeSummer(f,n-1):1;
+function immutableSummer(f , n) {
+    if (n - 1 == 1)
+        return f(1)? 1:0;
+    else if (f(n - 1))
+        return n - 1 + immutableSummer(f, n - 1)
+    else
+        return  immutableSummer(f, n - 1)
 }
+
 /*
     Write a function called projectEulerProblem1UsingImmutableSummer 
     that uses your immutableSummer and isDivisibleByThreeOrFive to
     again solve Project Euler Problem 1.  It should be one line of code!
 */
-function projectEulerProblem1UsingImmutableSummer(){
-    return immutableSummer(isDivisibleByThreeOrFive,1000);
+
+function projectEulerProblem1UsingImmutableSummer() {
+    return immutableSummer(isDivisibleByThreeOrFive, 1000)
 }
+
+
 
