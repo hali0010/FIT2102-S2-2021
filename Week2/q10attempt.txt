@@ -1,0 +1,11 @@
+ function sin(x) {
+    function sinTerm(n) {
+        return (((-1)**n)*(x**(2*n + 1))) / (factorial((2*n + 1)));
+    }
+    function sinSeriesCalculator(transform){
+        return function(n) {
+            return infinite_series_calculator(sumAccumulate)(alwaysTrue)(transform)(n);
+        } 
+    }
+    return sinSeriesCalculator(sinTerm)(x);
+ }

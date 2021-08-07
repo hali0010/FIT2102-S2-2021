@@ -1,0 +1,392 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Tutorial 2 Worksheet</title>
+        <script id="setTheme">
+          const dark = localStorage.getItem("darkCSS") ? JSON.parse(localStorage.getItem("darkCSS")) : false;
+          document.documentElement.setAttribute('data-theme', dark ? "dark" : "light")
+        </script>
+        <link id="style" href="./style.css" rel="stylesheet" />
+        <link href="./libs/mocha.css" rel="stylesheet" />
+        <link rel="stylesheet"
+            href="./libs/dracula.css">
+        <script src="./libs/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+        </script>
+        <script type="text/javascript" async
+          src="./libs/mathjax.js">
+        </script>
+
+    </head>
+    <body>
+        <div class="sliderWrapper">
+            <div><p>Dark Mode&nbsp;&nbsp;</p></div>
+              <label class="switch">
+                  <input type="checkbox" id="light_vs_dark_toggle">
+                  <span class="slider"></span>
+              </label>
+          </div>
+        <div class="left-div">
+            <div class="description">
+                <h1>
+                    Week 2 - Building an infinite series calculator
+                </h1>
+                <p>
+                    The goals for this week tutorial are:
+                </p>
+                <ul class="list">
+                    <li>Build familiarity with JavaScript for the assignment</li>
+                    <li>Work with JavaScript objects</li>
+                    <li>Work with fluent interfaces</li>
+                </ul>
+                <p>
+                    This week's tutorial will walk you through building an infinite series calculator. This will allow you to approximate a lot of constants(eg π) and functions(eg Sine).
+                    This program will build your confidence in the JavaScript environment and hopefully clarify a lot of the syntax that will be necessary to read TypeScript fluently.
+                    Before working through this worksheet, please finish reading the <a href="https://tgdwyer.github.io/javascript1/">JavaScript intro in the course notes</a>.
+                </p>
+                 <button class="collapsible"><h1>
+                    Exercise 1 - Creating an object!
+                </h1></button>
+                <div class="content">
+                <p>
+                    Please <task>(i) create a immutable variable `myObj`</task>. This myObj object needs to be similar to the myObj shown in the notes, except you will:
+                </p>
+                <p><br><task>(ii) Create a property on myObj with a key called aProperty and any string as a value</task>
+                    <br><task>(iii) Create another property with a key anotherProperty and with any number as a value</task>
+                    <br>(Opposite to what’s in the notes)
+                </p>
+                <p>
+                    Once you’ve written an answer into the main.js file, save your file and refresh the browser. If the browser doesn’t change, try <a href="https://www.getfilecloud.com/blog/2015/03/tech-tip-how-to-do-hard-refresh-in-browsers/#.WWYHINOGORs">hard refreshing</a> (which makes sure your file is reloaded into the browser and not from cache).
+                </p>
+                </div>
+                <div id="exercise_1_suite" ></div>
+                <button class="collapsible"><h1>
+                    Exercise 2 - C => Closures
+                </h1></button>
+                <div class="content">
+                <p>
+                    Functions can be written in many different ways. In the <a href="https://tgdwyer.github.io/javascript1#closures"></a>course notes you’ve seen that the following style of <i>curried function</i></a> is possible:
+                </p>
+                <pre><code>function add(x) {
+    return function(y) {
+        return y+x;
+    }
+}
+const addNine = add(9)
+addNine(10)
+> 19
+addNine(1)
+> 10</code></pre>
+<p>Here is another way to define the same <b>add</b> function:</p>
+<pre><code>function add(x) {
+    return y => y+x;
+}
+</code></pre>
+<p>And yet another way:</p>
+                <pre><code>const add = x => y => x + y</code></pre>
+                <p>
+                    Please <task>create a function <b>operationOnTwoNumbers</b> that takes a function as argument</task>.  The function that will be passed in will have the form:
+                    <code><pre>
+function (x,y) { return some operation on x and y }
+                    </pre></code><p> where x and y are numbers and the returned result is also a number.</p>
+                    <p>Then, <b>operationOnTwoNumbers</b> should return a <i>curried</i> function similar in structure to <b>add</b>.  However, instead of being hard-coded to
+                    always add two numbers, it should apply the specified operation.
+                </p>
+                <p>
+                    A concrete example of how <b>operationOnTwoNumbers</b> would be used will make it easier to understand. We want to be able to do the following:
+                </p>
+                <pre><code>const add = operationOnTwoNumbers((x,y) => x + y)
+const addNine = add(9)
+addNine(3)
+> 12
+const multiply = operationOnTwoNumbers((x,y) => x * y)
+const double = multiply(2)
+double(4)
+> 8</code></pre>
+                <p>
+                    Note: If you want to write a block (more than one line) of code in an arrow function you can use curly braces, i.e.
+                </p>
+                <pre><code>let sayName = name => {
+  let message = "Hello ";
+  console.log(message + name);
+}</code></pre>
+                </div>
+                <div id="exercise_2_suite" ></div>
+                <button class="collapsible"><h1>
+                    Exercise 3 - A Brief Look at Arrays
+                </h1></button>
+                <div class="content">
+                <p>
+                    In the video intro for this week you’ve seen the following:
+                </p>
+                <pre><code>['tim', 'sally', 'anne'].forEach(person=> console.log('hello ' + person))
+</code></pre>
+                <p>
+                    <task>Please create a function that calls all the functions stored in an array.</task></p>
+                    <p>This should be quite a small function. Please write a function <code>callEach(array)</code> which takes in an array of functions, and iterates along the array calling each function. Don’t use the JavaScript loop construct. Instead use the .forEach method on the array.<br><br>
+                    Example:
+                </p>
+                <pre><code>const fn1 = _ => console.log("Hey!");
+const fn2 = _ => console.log("Cool!");
+callEach([fn1, fn2]);
+> "Hey!"
+> "Cool!"
+</code></pre>
+                </div>
+                <div id="exercise_3_suite" ></div>
+                <button class="collapsible"><h1>
+                    Exercise 4 - Map/Filter/Reduce
+                </h1></button>
+                <div class="content">
+                <p>
+                    Map, Filter and Reduce will become your best friends in the coming weeks! You were introduced to these in this weeks lecture, but this exercise will serve as a quick practical introduction on using these very powerful functions.
+                </p>
+                <ul class="list">
+                    <li><i>map:</i> Often we find ourselves needing to modify every element in the exact same way. Map is built to do exactly that, executing a callback function on every element in the array</li>
+                    <li><i>filter:</i> The next function is filter, it does what it sounds like, removing unwanted elements from a list. It will return a new array which will only contain the elements for which the predicate returned true</li>
+                    <li><i>reduce:</i> Reduces takes all of the elements in an array, and reduces them into a single value.</li>
+                </ul>
+                <p>
+                    In this exercise you will need to make use of these functions to implement some small tasks! You should implement no explicit for loops or recursion but make use one/multiple of the above functions.
+                </p>
+                <ul class="list">
+                    <li><task>(i) Implement a function named <code>addN</code>, a function which takes in two arguments a number <code>n</code> and an array</task>. Your function should return a new array such that every element is increased by the value <code>n</code>. Try to use the operationOnTwoNumbers function you defined earlier!</li>
+                    <li><task>(ii) Implement a function named <code>getEvens</code>, which takes in an array and returns a new array with only even numbers</task></li>
+                    <li><task>(iii) Implement a function named <code>multiplyArray</code>, which takes in an array of numbers and return the product of all elements. However, if there are any zeros, these will need to be skipped!</task></li>
+                </ul>
+                </div>
+                <div id="exercise_4_suite" ></div>
+
+                <button class="collapsible"><h1>
+                    Exercise 5 - Range
+                 </h1></button>
+                 <div class="content">
+                 <p>
+                     <task>Write a function <i>range</i> which creates a list from 0 to n-1. Please do This recursively!</task>
+                </p>
+                <p>
+                    Hint: You may need to make use of the <a href="https://www.w3schools.com/jsref/jsref_concat_array.asp">concat</a> function!
+                </p>
+                </div>
+                  <div id="exercise_5_suite" ></div>
+
+
+                <button class="collapsible"><h1>
+                    Exercise 6 - Euler Problem 1
+                </h1></button>
+                <div class="content">
+                <p>
+                In week 1 you were introduced to the first Euler Problem:
+            <br><i>
+            "If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.<br>
+            Find the sum of all the multiples of 3 or 5 below 1000."</i><br><br>
+
+            and you created a solution for this using both imperative loops as well as recursion. However, it would be nice if this was abstracted further so we do not have to worry about base cases or loops.
+                </p>
+                <p>
+                <task>Please create a program which uses fluent programming-style chained operators on the array returned by your <code>range</code> function to solve the first euler problem. Your function will take no arguments. You will need to apply array functions(map, filter, etc) to calculate the number.</task>
+                </p>
+                <p>If you are unsure which functions you can use, please refer to the <a href="https://tgdwyer.github.io/javascript1#array-cheatsheet">cheatsheet in the course notes</a>.
+                </p>
+                </div>
+                <div id="exercise_6_suite" ></div>
+                <button class="collapsible"><h1>
+                    Exercise 7 - Infinite Series Calculator
+                </h1></button>
+                <div class="content">
+                <h4>Quick Intro On Infinite Series:</h4>
+                <p>
+                Lets consider the series
+                $$ \frac{1}{2} + \frac{1}{4} + \frac{1}{8} + \frac{1}{16} + \textit{ ...}$$
+                If we consider the running total for the series above, we will get the following:
+                $$0.5, 0.75, 0.875, 0.9375, 0.96875$$
+                Our sum seems to approach a finite value of 1. Counterintuitively, an infinite amount of numbers can add up to a finite number!<br>
+
+                Some infinite series have some interesting properties. Consider the following series:
+                $$ 1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + \frac{1}{9} + \textit{ ...}$$
+
+                If we sum up this series with an infinite amount of terms, it will sum to π/4! We now have a way to compute π using simple computations.
+                </p>
+                <h4>Quick guide to notation we will use:</h4>
+                <p>
+                To represent an infinite sum we will use
+                $$\sum_{i=0}^\infty i$$
+                Written in long form this will be:
+                $$ 0 + 1 + 2 + 3 + 4 + 5 + \textit{ ...}$$
+
+                To represent an infinite product we will use
+                $$\prod_{i=1}^\infty i$$
+                Written in long form this will be:
+                $$ 1 \times 2 \times 3 \times 4 \times 5 \times \textit{ ...}$$
+                </p>
+
+                <p><task>Create a function called infinite_series_calculator that takes 4 curried parameters as below</task></p>
+                <p>
+                For this task we will build up a framework to build a general purpose infinite series calculator.
+
+                To help you with this task, you will need to use your 'range' function from above, which creates a list of numbers from [0, n).
+
+                We want this finite series calculator to be as general and powerful as possible. Therefore, it will need to take in four curried arguments:
+                </p>
+                <ul class="list">
+                    <li><code>accumulate</code> - How to accumulate a list, for example we could sum up the list or we could take the product! Our general function will need to be able to do both. We will assume our function will be commutative, that is f(x,y) = f(y, x). </li>
+                    <li><code>predicate</code> - Sometimes, not all numbers in the list will need to be included. We can use the predicate to skip some numbers - it will take one argument (a list item) and will return a boolean: <code>true</code> if the item is to be included, <code>false</code> if the item is to be skipped</li>
+                    <li><code>transform</code> - A method to transform each item in the list - it will take one argument (a list item) and return the transformed result.</li>
+                    <li><code>n</code> - We need to cut off the series at some point as we can not use an infinite amount of numbers in our sum</li>
+                </ul>
+                <p>
+                    To be clear, you are not writing the <code>transform</code>, <code>predicate</code> and <code>accumulate</code> functions now, you are simply receiving them as arguments to your <code>infinite_series_calculator</code> from the tests.
+                </p>
+                <p>
+                Feel free to click on the tests below, which will show the precise assertion being tested.
+                </p>
+            </div>
+                <div id="exercise_7_suite" ></div>
+                <button class="collapsible"><h1>
+                    Exercise 8 - Using our calculator to calculate Pi
+                </h1></button>
+                <div class="content">
+                <p>
+                Using your function infinite_series_calculator, we will be able to approximate some mathematical constants.
+                Your next task is to use infinite_series_calculator to calculate the value of the following series:
+                </p>
+                $$\pi = 2 \times \prod_{n=1}^{\infty} \frac{4n^2}{4n^2-1}$$
+                <p>
+                We will walk you through how to do these and setting up all the functions to use.
+                </p>
+                <ul type="i" class="list">
+                    <li>We will need a way to calculate each term of the series. We will be given a number in the series <i>n</i> and then from this we can calculate the nth term. <br>
+                        <task>Create a function <code>calculatePiTerm</code> which will have one parameter <code>n</code> and calculate the nth term of the series.</task></li>
+                    <li>We will use our predicate. Looking at the definition of the product and range, we know that range will include the 0 but the product should not. We can use our predicate to skip this term. <br>
+                        <task>Create a function <code>skipZero</code>, which takes a number parameter and will return true for any number <u>except</u> zero</task></li>
+                    <li>We need our accumulation function.
+                        <task>Create a function called <code>productAccumulate</code> which takes in two arguments and multiplies them</li>
+                    <li><task>Create a function called <code>calculatePi</code> which will take in an argument <i>n</i>.  Using this function, try to determine the value of n such that we meet a tolerance of ±0.01 of the true value.</task> You will need to use your <code>infinite_series_calculator</code>, <code>calculatePiTerm</code>, <code>skipZero</code> and <code>productAccumulate</code> to approximate the value of pi using the first <i>n</i> terms of the sum.</li>
+                    <li>Finally, <task>Using <code>calculatePi</code>, try to determine the value of n such that the immutable variable <code>pi</code> meets a tolerance of ±0.01 of the true value</task</li>
+
+                </ul>
+                </div>
+                <div id="exercise_8_suite" ></div>
+
+                <button class="collapsible"><h1>
+                    Exercise 9 - Using our calculator to calculate e
+                </h1></button>
+                <div class="content">
+                <p>
+                    Next up is e
+                </p>
+                $$e =  \sum_{n=0}^{\infty} \frac{2 *(n+1)}{(2n+1)!}$$
+                <p>
+                We will walk you through how to do this one as well
+                </p>
+                <ol type="i" class="list">
+                    <li>JavaScript does not have an inbuilt way to calculate factorials, you will need to make a factorial algorithm. <task>Create a function <code>factorial</code> which accepts one argument and calculates the factorial.</task> Try to do this recursively and avoid loops!</li>
+                    <li>We will need a way to calculate each term of the series. We will be given a number in the series <i>n</i> and then from this we can calculate the term. <task>Create a function <code>calculateETerm</code> which will have an argument and calculate the nth term of the series.</task> We will be using this later.</li>
+                    <li>Next, we need our accumulation function. <task>Create a function called <code>sumAccumulate</code>, which takes in two arguments and adds them</task></li>
+                    <li>Next we will need our predicate. We know for this series, we will not need to skip any terms. So <task>create a function <code>alwaysTrue</code> which returns true no matter the input</task></li>
+                    <li>
+                        Next, we will create an infinite series calculator just for infinite sums. <task>Create a function called <code>sum_series_calculator</code> that takes in a two curried parameters, <code>transform</code> and <code>n</code>.</task> The parameters are the same as is specified in <code>infinite_series_calculator</code>. Use <code>infinite_series_calculator</code> and the accumulation and predicate functions.
+                    </li>
+                    <li><task>Create a function called <code>calculateE</code> which will take in an argument <i>n</i>.</task> You will need to use your <code>sum_series_calculator</code> and the transform function created earlier to approximate the value of e using the first <i>n</i> terms of the sum.</li>
+                    <li>Finally,<task>Using <code>calculateE</code>, try to determine the value of n such that the immutable variable <code>e</code> meets a tolerance of ±0.01 of the true value</task</li>
+                </ol>
+                </div>
+                <div id="exercise_9_suite" ></div>
+                <button class="collapsible"><h1>
+                    Exercise 10 - Using our calculator to calculate sin(x)
+                </h1></button>
+                <div class="content">
+                <p>
+                We will not walk you through this one, but you will use similar steps as above to create your own function to calculate sin(x):
+            </p>
+            $$sin(x) = \sum_{n=0}^{\infty} \frac{(-1)^nx^{2n+1}}{(2n+1)!}$$
+            </p>
+
+                </p><p><task>Create a function sin, which takes in an argument x and returns the approximate value of sin(x)</task>
+                </div>
+                <div id="exercise_10_suite" ></div>
+            </div>
+        </div>
+        <div class="right-div">
+            <div id="mocha" class="test"></div>
+        </div>
+        <script src="./libs/mocha.js"></script>
+        <script src="./libs/chai.js"></script>
+        <script src="./libs/sinon.js"></script>
+        <script>
+            mocha.setup('bdd');
+            let expect = chai.expect;
+        </script>
+        <script src="./main.js"></script>
+        <script src="./test/main.test.js"></script>
+        <script>
+            mocha.checkLeaks();
+            mocha.run(() => { // run after tests are complete
+                // split the test report up and intersperse the results
+                // sections of the worksheet with id exercise_??_suite
+                const mochaReport = document.getElementById("mocha-report")
+                Array.from(mochaReport.children).forEach(element => {
+                    const exerciseId = element.children[0].innerText,
+                        exerciseTestResults = element.children[1],
+                        resultsDiv = document.createElement("div")
+                    resultsDiv.id = "mocha"
+                    resultsDiv.className = "test"
+                    const heading = document.createElement("h4")
+                    heading.innerText = "Exercise Test Results:"
+                    resultsDiv.appendChild(heading)
+                    resultsDiv.appendChild(exerciseTestResults)
+                    document.getElementById(exerciseId).appendChild(resultsDiv)
+                });
+                mochaReport.remove();
+
+              // persist vertical scroll position
+              const scrollY = sessionStorage.getItem("scrollY");
+              if (scrollY !== null) {
+                window.scroll(0, scrollY);
+              }
+              window.onunload = () => sessionStorage.setItem("scrollY", window.scrollY);
+            });
+
+            const collapsibles = Array.from(document.getElementsByClassName("collapsible"));
+            // get collapse status
+            const collapseStatus = sessionStorage.getItem("collapseStatus") ?
+                    JSON.parse(sessionStorage.getItem("collapseStatus")) :
+                    collapsibles.map(coll => coll.classList.contains("active"));
+
+            collapsibles.forEach((coll, i) => {
+              // expand if previously expanded
+              if (collapseStatus[i]) {
+                coll.classList.add("active");
+                const content = coll.nextElementSibling;
+                content.style.display = "block";
+              }
+
+              coll.addEventListener("click", function () {
+                this.classList.toggle("active")
+                collapseStatus[i] = !collapseStatus[i];
+                const content = this.nextElementSibling
+                content.style.display = collapseStatus[i] ? "block" : "none"
+                // save collapse status on change
+                sessionStorage.setItem("collapseStatus", JSON.stringify(collapseStatus));
+              });
+            });
+
+            // persist dark/light choice in localstorage
+            const checkbox = document.getElementById('light_vs_dark_toggle')
+            const darkCSS = localStorage.getItem("darkCSS") ? JSON.parse(localStorage.getItem("darkCSS")) : false;
+            if (darkCSS) {
+              checkbox.checked = true;
+            }
+
+            checkbox.addEventListener('change', (event) => {
+              const dark = event.target.checked
+              document.documentElement.setAttribute('data-theme', dark ? "dark" : "light")
+              localStorage.setItem("darkCSS", JSON.stringify(dark))
+            });
+
+        </script>
+    </body>
+</html>
