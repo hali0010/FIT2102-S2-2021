@@ -3,10 +3,10 @@ Complete the following table when you submit this file:
 
 Surname     | Firstname | email | Contribution% | Any issues?
 =============================================================
-Person 1... |           |       | 25%           |
-Person 2... |           |       | 25%           |
-Person 3... |           |       | 25%           |
-Person 4... |           |       | 25%           |
+Hackwill    |Riley      |rhac0001@student.monash.edu| 25%           |
+Ali         |Haider     |hali0010@student.monash.edu| 25%           |
+Mark        |Stoeghofer |msto0012@student.monash.edu| 25%           |
+Whittaker   |Finn       |fwhi0002@student.monash.edu| 25%           |
 
 complete Worksheet 1 by entering code in the places marked below...
 
@@ -23,86 +23,95 @@ browser window to run the test.
     Create a mutable variable called ‘aVariable’ and assign its value to 1.
 */
 // your first line of code here...
-var aVariable = 1;
+
+let aVariable = 1;
+
 /*
     Create an immutable variable called ‘aConst’ and assign its value to aVariable + 1.
 */
 // your second line of code here...
+
 const aConst = aVariable + 1;
+
 /**
     Exercise 2:
     Create a function called ‘aFunction’ using the function keyword.  
     Inside the function create another variable called 'anotherVariable',
     set its value to 2 and return anotherVariable.
 */
-function aFunction(){
-    var anotherVariable =2;
-    return anotherVariable;
+
+function aFunction() {
+    let anotherVariable = 2;
+    return anotherVariable
 }
+
 /**
     Exercise 3:
     Make a function called ‘projectEulerProblem1’ that calculates the answer using
     mutable variables, a while loop, and returns the answer.
 */
-function projectEulerProblem1(){
-    let sum = 0;
-    let i = 0;
-    while (i<1000){
-        if((i%3==0)||(i%5==0)){
-            sum+=i;
+function projectEulerProblem1() {
+    let n = 999;
+    let result = 0;
+    while (n > 0) {
+        if (n % 3 == 0 || n % 5 == 0) {
+            result += n;
         }
-        i++;
+        n -= 1;
     }
-    return sum;
+    return result;
 }
 
 /**
     Exercise 4:
     Write a function called ‘alwaysTrue’ which always returns true, no matter what argument it is given.
 */
-function alwaysTrue(){
-    return true;
-}
+    function alwaysTrue() {
+        return true;
+    }
+
 /**
     Write a function called imperativeSummer that takes two parameters: a function f, and a number n.  
     It should use an imperative loop to sum over the numbers from 1 up to (but not including) n,
     including the number x in the sum only if f(x) is true.
 */
-function imperativeSummer(f,n){
-  var sum = 0;
-    for (let x = 1;x<n;x++){
-      if(f(x)){
-        sum +=x;
-      }
-  }
-  return sum;
-}
+
+    function imperativeSummer(f, n) {
+        let sum = 0
+        for (let i = 1; i < n; i++) {
+            if (f(i)){
+                sum += i;
+            }
+        }
+        return sum;
+    }
 /**
     Write a function called sumTo that takes as parameter a number n and
     uses imperativeSummer and alwaysTrue to calculate the sum of all numbers
     from 1 up to (but not including) n.
 */
+
 function sumTo(n) {
     return imperativeSummer(alwaysTrue, n);
 }
+     
 /**
     Write a function called ‘isDivisibleByThreeOrFive’ which takes a number as parameter,
     tests if it is divisible by 3 or 5, returning true if it is.
 */
-function isDivisibleByThreeOrFive(n){
-    if((n%3==0)||(n%5==0)){
-        return true;
+    function isDivisibleByThreeOrFive(n) {
+        return (n % 3 == 0 || n % 5 == 0);
     }
-    return false;
-}
 /**
     Write a function called projectEulerProblem1UsingImperativeSummer 
     that uses your imperativeSummer and isDivisibleByThreeOrFive to
     again solve Project Euler Problem 1.  It should be one line of code!
 */
-function projectEulerProblem1UsingImperativeSummer(n=1000){
-    return n ? imperativeSummer(isDivisibleByThreeOrFive,n):0;
+
+function projectEulerProblem1UsingImperativeSummer() {
+    return imperativeSummer(isDivisibleByThreeOrFive, 1000);
 }
+
 /**
     Exercise 5:
     Write a function called 'immutableSummer' with parameters f and n, which computes the sum of numbers
@@ -116,8 +125,9 @@ function immutableSummer(f , n) {
     else if (f(n - 1))
         return n - 1 + immutableSummer(f, n - 1)
     else
-        return  immutableSummer(f, n - 1)
+        return immutableSummer(f, n - 1)
 }
+
 
 /*
     Write a function called projectEulerProblem1UsingImmutableSummer 
@@ -128,6 +138,4 @@ function immutableSummer(f , n) {
 function projectEulerProblem1UsingImmutableSummer() {
     return immutableSummer(isDivisibleByThreeOrFive, 1000)
 }
-
-
 
