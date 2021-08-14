@@ -1,0 +1,616 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Tutorial 3 Worksheet</title>
+  <script id="setTheme">
+    const dark = localStorage.getItem("darkCSS") ? JSON.parse(localStorage.getItem("darkCSS")) : false;
+    document.documentElement.setAttribute('data-theme', dark ? "dark" : "light")
+  </script>
+  <link id="style" href="./style.css" rel="stylesheet" />
+  <link href="./libs/mocha.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./libs/dracula.css">
+  <script src="./libs/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+  </script>
+  <script type="text/javascript" src="./libs/mathjax.js"></script>
+</head>
+<body>
+  <div class="sliderWrapper">
+    <div><p>Dark Mode&nbsp;&nbsp;</p></div>
+      <label class="switch">
+          <input type="checkbox" id="light_vs_dark_toggle">
+          <span class="slider"></span>
+      </label>
+  </div>
+
+  <div class="main-div">
+    <div class="description">
+      <h1>
+        Week 3 - Pretty Printing
+      </h1>
+      <h1>
+        Setting up your TypeScript project and running it
+      </h1>
+      <p>
+        You’ve been introduced to TypeScript, and transpiling your TypeScript to JavaScript. This document will get you set up with a simple workspace that can be used to complete the workshops, do exercises, and work on the first assignment.
+      </p>
+      <p>
+        To transpile from TypeScript to JavaScript we’ll need to install Node.js which comes with a command-line tool called `npm` (Node Package Manager). Using this tool we’ll be able to install TypeScript and get set up quickly.
+      </p>
+      <button class="collapsible"><h1>
+        Step 1 - Installing Node.js and npm
+      </h1></button>
+      <div class="content">
+      <p>
+      Install Node by visiting nodejs.org and download either version. Once downloaded run the installer and accept the defaults. By default Node will be added to your computer’s path. This will allow you to access node in the command line.
+      </p>
+      <p>
+        NOTE: If you have node already installed, please make sure it is upgraded to the latest version!
+      </p>
+      <p>
+        To check that node installed properly open your command line (Windows) or Terminal (Mac and Linux) and type `node --version`. You should get the node version you installed returned to you. Also check `npm --version` to make sure your Node Package Manager installed correctly.
+      </p>
+<pre><code class="bash">$ node --version
+  V8.1.0    (your installed version will be newer than this)
+</code></pre>
+  <p>
+      Checking npm version on Windows:
+  </p>
+<pre><code class="bash">C:\Users\userName>npm --version
+  3.10.10    (your installed version will be newer than this)
+</code></pre>
+      <p>
+      If the installation didn’t work, try these more comprehensive instructions for your platform:
+      <ul class="list">
+        <li><a href="https://nodesource.com/blog/installing-nodejs-tutorial-windows/">Node and npm installation on Windows</a></li>
+        <li><a href="https://nodesource.com/blog/installing-nodejs-tutorial-mac-os-x/">Node and npm installation on Mac</a></li>
+        <li><a href="https://nodesource.com/blog/installing-node-js-tutorial-debian-linux/">Node and npm installation on Debian Linux</a></li>
+      </ul>
+      </p>
+      <h1>
+      Step 2 - Installing VS Code and setting up your project folder
+      </h1>
+      <p>
+        Now that you have node and npm you can set up the week 3 code.  To use the build tools for typescript you will need a command line.
+        The instructions below are for <a href="https://code.visualstudio.com/">VS Code</a>.  If you have a preferred editor and way of accessing a
+        terminal that's fine.
+      </p>
+      <p>
+      If you are using Visual Studio Code (VS code), open your unzipped week 3 code folder in Visual Studio Code (use <b>File ->pen Folder</b> ").
+      </p>
+      <p>
+      Access the command line in VS Code by selecting <b>View -> Terminal</b> and then type:
+      </p>
+<pre><code>npm install typescript
+</code></pre>
+<p>You only have to do this the first time you work with the project</p>
+      <h1>
+        Step 3 - Transpiling your files
+      </h1>
+        <p>
+        The source file that you will be editing this week is `main.ts`, which is a TypeScript file which needs to be transpiled to JavaScript.
+        In your command line type:
+<pre><code>$ npm run build
+</code></pre>
+        This will automatically transpile everything in your project folder with the file extension `.ts`.
+        There will be error messages because the code for the first exercise does not yet have type annotations (see below).
+</p>
+<p>After first performing the transpile, the build command you just typed will continue watching for changes in you `main.ts` file, and recompile automatically if so (i.e. after you save your changes).
+        </p>
+
+      <p>
+        A `main.js` file has appeared. When you open worksheetChecklist.html this is the script against which the tests will run, and if the main.js file was generated correctly the first test below will pass.<p>
+      Congratulations for setting up and running your project! You’re now ready to write type safe JavaScript.
+      </p>
+      </div>
+      <div id="exercise_0_suite" ></div>
+      <h1>
+        Introduction
+      </h1>
+      <p>
+        In this problem set we will explore the benefits of functional programming by building a simple pretty printer using the
+        concepts explored in the course notes.
+        Please read <a href="https://tgdwyer.github.io/typescript1/">the course notes on TypeScript</a> before continuing.
+      </p>
+      <p>
+        We’ll start by adding types to our code using TypeScript.
+      </p>
+      <p>
+      Pretty printers are often behind the scenes when you’re coding. They help keep your code indented,  keywords coloured and syntactic errors pointed out. Often they’re  used to enforce a “style” keeping the code looking consistent. The programming language Go has a tool called ‘gofmt’ that formats your code. When writing Go it’s customary to format your code before sharing it (and often after every save). There’s a fantastic 8 minute talk about pretty printers in JavaScript <a href="https://www.youtube.com/watch?v=hkfBvpEfWdA">here</a>.
+      </p>
+      <p>
+      By the end of this workshop you’ll be able to pretty print N-ary trees, and apply this technique to pretty printing JSON (JavaScript Object Notation). Programming languages are often represented by an abstract syntax tree. Therefore the skills to pretty print trees could be used to pretty print a file of code.
+      </p>
+      <p>
+      First, we’ll expand on the functions seen in this week’s lecture and add type signatures.
+      </p>
+      <p>
+      Then we’ll use a TypeScript class to create a linked list that’s closer to what you’d see in Python but with generic types.
+      </p>
+      <p>
+      Next, you’ll be introduced to the pretty printer data model which you’ll be manipulating to create a pretty output.
+      </p>
+      <p>
+      Finally, using your functions you’ll visualise some trees and JSON (if you want)!
+      </p>
+      <h1>
+        Outcomes
+      </h1>
+      <ul class="list">
+        <li>Practice using and implementing types in TypeScript</li>
+        <li>Implement and use: cons, head, rest, map, filter, reduce</li>
+        <li>Create a program in a functional style</li>
+        <li>Using recursion, map, filter, reduce instead of loops</li>
+        <li>Traversing simples trees.</li>
+        <li>Get introduced to fluent-style programming chaining</li>
+      </ul>
+      <h1>
+        Worksheet constraints
+      </h1>
+      <p>
+        Loops are not allowed. Instead use your `map`, `filter`, `forEach` or `reduce` functions, as well as recursion.
+      </p>
+
+      <button class="collapsible"><h1>
+        Exercise 1
+      </h1></button>
+      <div class="content">
+      <p>
+        This week you’ve seen some TypeScript. It’s like an expansion pack to JavaScript, introducing types and other cool things.
+      </p>
+      <p>
+      <task>In main.ts there is some untyped JavaScript (in the tsconfig.json file we are allowing this to compile without complaint by setting noImplicitAny to false).  Please add type annotations for each of these.</task>  You will know you have added complete type definitions when your code compiles with noImplicitAny set to true.
+      </p>
+      <p>
+      To help with typing your functions here are some examples:
+      </p>
+      <p>
+<pre><code>// Typing the default syntax function
+  function add(a: number, b: number): number {
+    return a + b;
+}
+</code></pre>
+      <p>
+      The type highlighted in light green is the type returned by the function.
+      </p>
+      <p>
+      If a function is assigned to a variable, it’s possible to show the type of the function using arrow functions.
+      </p>
+      <p>
+      I.e.
+      </p>
+<pre><code>// The blue part is the type. Then the implementation.
+const add: (a: number, b: number) => number = (a, b) => a + b;
+</code></pre>
+      <p>
+      This arrow function type declaration can be used anywhere you want to define some function. Notice you need to add argument names. This helps create nice documentation as TypeScript can tell you the argument names expected as well as the types.
+      </p>
+      <p>
+      Example of adding types to an argument that’s a function:
+      </p>
+      <p>
+      Using the function `operationOnTwoNumbers` defined in last week’s worksheet:
+      </p>
+<pre><code>const operationOnTwoNumbers = (f: (a: number, b: number) => number) => (x: number) => (y: number) => f(x,y);</code></pre>
+      <p>
+      Soon you’ll be seeing &lt;T&gt; and &lt;V&gt; everywhere. You can use any letter or any word you like. These are generic type signatures. If you define the following functions:
+      </p>
+<pre><code>function identity (x) { return x };
+</code></pre>
+You might want to allow different types of x to pass through. Therefore in typescript you can define x as a generic type.
+<pre><code>function identity&lt;T&gt; (x:T):T { return x };
+let aNumberVariable = identity(10);         // Here T becomes number
+let aStringVariable = identity("Hello");    // Here T becomes string
+</code></pre>
+      <p>
+      This allows identity to be applied to any type, but importantly, it asserts that the return type is the same as the parameter type which is used by the compiler to infer types from the context.
+      </p><p>
+      The net result is that the generic function is just as easy to use (no more syntax to call) than the untyped or &lt;any&gt; typed version - but the compiler enforces type correctness, e.g. that the return type of identity matches the parameter type.
+      </p>
+      </div>
+      <button class="collapsible"><h1>
+        Exercise 2 - Map!
+      </h1></button>
+      <div class="content">
+      <p>
+        This week you’ve covered the following functions:
+      </p>
+      <ul class="list">
+        <li>cons</li>
+        <li>head</li>
+        <li>rest</li>
+      </ul>
+      <p>
+      You’ve been provided with these functions with their types added! <task>Implement the `map` function (from the notes) and see how the types help catch errors!</task>
+      </p>
+<pre><code>console.log(head(map(v => v.length, cons("Hey!", undefined))));
+  >4
+</code></pre>
+      </div>
+      <div id="exercise_1_suite" ></div>
+      <button class="collapsible"><h1>
+        Exercise 3 - More Manipulations
+      </h1></button>
+      <div class="content">
+      <p>
+        <task>Again using the notes, please add types for and implement the following functions. Make sure you use type annotations for these functions!</task>
+      </p>
+      <ul class="list">
+        <li>fromArray
+          <br>Hint: You can do this recursively - use arr.slice(1) to get a copy of the array excluding the first element
+          <br>Alternatively, you can use an array reduce method (arr.reduce, arr.reduceRight) to do it without recursion.
+        </li>
+        <li>filter</li>
+        <li>reduce</li>
+        <li>reduceRight</li>
+        <li>concat</li>
+        <li>reverse</li>
+          <br>Hint: You may need to use the concat function!
+      </ul>
+    </div>
+      <div id="exercise_2_suite" ></div>
+      <p>
+        If you click on the test titles, you can see your functions in action!
+      </p>
+      <button class="collapsible"><h1>
+        Exercise 4 - Creating a List with types!
+      </h1></button>
+      <div class="content">
+      <p>
+        The `main.ts` file contains the skeleton of the List&lt;T&gt; class. The class’ constructor takes either an array or an existing ConsList&lt;T&gt;. This class will “wrap” around the existing ConsList&lt;T&gt;: this will allow composition of `map`, `filter` and `reduce` through fluent programming style chaining, e.g.:
+      </p>
+<pre><code>new List([1,2,3,4,5])
+    .filter(x=>x%2>0)
+    .forEach(x=>console.log(x))
+    .reduce((x,y)=>x+y,0)
+</code></pre>
+      <p>
+      <task>Complete the constructor of this class and add these methods such that all the tests pass:</task>
+      </p>
+      <ul>
+        <li>forEach - see the forEach note below<br>
+          SPOILER: <span style="color: transparent !important;">forEach(f: (_:T) => void): List&lt;T&gt;</span>
+        </li>
+        <li>filter<br>
+          SPOILER: <span style="color: transparent !important;">filter(f: (_:T) => boolean): List&lt;T&gt;</span>
+        </li>
+        <li>map<br>
+          SPOILER: <span style="color: transparent !important;">map&lt;V&gt;(f: (_:T) => V): List&lt;V&gt;</span>
+        </li>
+        <li>reduce<br>
+          SPOILER: <span style="color: transparent !important;">reduce&lt;V&gt;(f: (accumulator:V, t:T) => V, initialValue: V): V</span>
+        </li>
+        <li>concat<br>
+          SPOILER: <span style="color: transparent !important;">concat(other: List&lt;T&gt;): List&lt;T&gt;</span>
+        </li>
+      </ul>
+      <p>
+        Your forEach method should return a copy of the current list. This allows for “tapping into” a fluent programming style chain, for when you want to console.log every item in the chain at a certain point like the example above.
+      </p>
+      <p>
+        You do not need to add the “T” type parameter to the methods above - the “T” type parameter is already given as part of the List class.
+      </p>
+      <p>
+        If you are stuck on the type signatures for a specific method, we have provided spoilers for the types if you are very stuck. Highlight the spoiler to reveal it!
+        <br>You will have already written similar functions operating on ConsLists in exercise 2 and 3 - they may come in handy for this task too.
+      </p>
+    </div>
+      <div id="exercise_3_suite" ></div>
+      <button class="collapsible"><h1>
+        Exercise 5 - The Beginning of Pretty Text
+      </h1></button>
+      <div class="content">
+      <p>
+        Your pretty printer will follow a very simple data model. We’ll store each line as a tuple [number, string] representing the indentation of the line and the content respectively.
+        Thus we aim to make a program that converts text to a model and finally to a pretty string.
+        <br><i>I.e. Ugly string -> data model -> Beautiful string</i>
+      </p>
+<pre><code>let uglyString = "{ 'name': 'Mary' }"
+let data = [
+  [0, '{'],
+  [2, 'name: Mary'],
+  [0, '}'],
+]
+
+/** Output as:
+{
+name: Mary
+}
+*/
+</code></pre>
+      <p>
+        You’ll need some functions that can be composed together to create your pretty printer. Please implement the following functions:
+      </p>
+      <p><task>line</task></p>
+<pre><code>line("nice!")
+// returns [0, "nice!"]
+
+line("");
+// returns [0, ""]
+</code></pre>
+      <p>You can’t combine your lines unless they’re wrapped in a List&lt;T&gt;. <task>Therefore implement function `lineToList` which returns a List&lt;[number, string]&gt; with only 1 element and the type signature:</task></p>
+<pre><code>function lineToList(line: [number, string]): List<[number, string]></code></pre>
+      <p>
+      <p>
+        All that is missing is the ability to indent your line model: [number, string].
+      </p>
+    </div>
+      <div id="exercise_4_suite" ></div>
+      <button class="collapsible"><h1>
+        Exercise 6 - Pretty Binary Trees
+      </h1></button>
+      <div class="content">
+      <p>
+        You want to use the pretty printer you’ve been constructing to draw a binary tree. You’ve found some code that draws a binary tree, however there is a problem. You haven’t implemented the function `nest` yet. <task>After reading the code below, please implement the function `nest` making sure your output matches the comments at the end of the code sample, and passes the tests</task>.
+      </p>
+<pre><code>type BinaryTree<T> = BinaryTreeNode<T> | undefined
+class BinaryTreeNode<T> {
+    constructor(
+        public data: T,
+        public leftChild?: BinaryTree<T>,
+        public rightChild?: BinaryTree<T>,
+    ){}
+}
+
+function prettyPrintBinaryTree<T>(node: BinaryTree<T>): List<[number, string]> {
+    if (!node) {
+        return new List<[number, string]>([])
+    }
+    const thisLine = lineToList(line(node.data.toString())),
+          leftLines = prettyPrintBinaryTree(node.leftChild),
+          rightLines = prettyPrintBinaryTree(node.rightChild);
+    return thisLine.concat(nest(1, leftLines.concat(rightLines)))
+}
+
+const output =
+    prettyPrintBinaryTree(myTree)
+        .map(aLine => new Array(aLine[0] + 1).join('-') + aLine[1])
+        .reduce((a,b) => a + '\n' + b, '')
+        .trim();
+
+console.log(output);
+
+// Prints:
+//1
+//-2
+//--3
+//-4
+</code></pre>
+      <p>
+      <task>Please implement nest:</task>
+      </p>
+      <pre><code>function nest (indent: number, layout: List&lt;[number, string]&gt;): List&lt;[number, string]&gt;</code></pre>
+      <p>
+        Nest should take a layout and increase the indent of all lines by the given indent. For example:
+      </p>
+<pre><code>let data: [number, string][] = [
+   [0, '{'],
+   [2, 'name: Mary'],
+   [0, '}'],
+];
+
+console.log(nest(1, new List(data)).toArray());
+// [
+//     [1, '{'],
+//     [3, 'name: Mary'],
+//     [1, '}'],
+// ]
+</code></pre>
+      <p>
+        You may encounter some type errors when writing nest, such as “Type '(string | number)[]' is not assignable to type '[number, string]'”. TypeScript may get confused about the type of an object in the form `[number, string]` - it can also be interpreted as an array where each element is `string | number`! As a result, TypeScript may infer the type of a variable or a type variable differently from what you’d expect.
+      </p>
+      <p>
+      If this occurs, you can “cast” the ambiguous object into another type, or override the type variable to a function / method call that TypeScript inferred for you.
+      <br>To cast an object into another type, put the type before the object wrapped in <>:
+      </p>
+<pre><code>// infers type to be (string | number)[]
+const exampleLine1 = [0, "nice!"];
+// explicitly cast type of right hand side to be [number, string]
+// so TypeScript infers the type to be [number, string]
+const exampleLine2 = <[number, string]>[0, "nice!"];
+</code></pre>
+      <p>
+        To override the type variable inference of a function / method call, put the type variables wrapped in &gt;&lt; before the parentheses of a function / method call - or cast the type of the arguments in a way which is unambiguous:
+      </p>
+<pre><code>// infers type to be string[]
+const stringArray = ["array", "of", "strings"];
+// infers type to be (string | number)[]
+const lineArray1 = stringArray.map(str => [0, str]);
+// explicitly set the type variable U to be [number, string] in
+// the type definition of Array.map:
+// Array&lt;T&gt;.map&lt;U&gt;(callbackfn: (value: T) => U): U[],
+// thus inferring the type of lineArray2 to be [number, string][]
+const lineArray2 = stringArray.map<[number, string]>(str => [0, str]);
+// explicitly cast the return value of the mapped function to be
+// [number, string], thus inferring U to be [number, string] like lineArray2
+// and inferring the type of lineArray3 to be [number, string][]
+const lineArray3 = stringArray.map(str => <[number, string]>[0, str]);
+</code></pre>
+      </div>
+      <div id="exercise_5_suite" ></div>
+        <button class="collapsible"><h1>
+          Exercise 7 - Pretty N-ary Trees
+        </h1></button>
+        <div class="content">
+      <p>
+        Often syntax trees aren’t binary trees, but N-ary trees. Currently the `prettyPrintTree` function only supports a left and right child. <task>Write a new function called `prettyPrintNaryTree` that takes in the following tree type:</task>
+      </p>
+<pre><code>class NaryTree<T> {
+  constructor(
+      public data: T,
+<!--  need to escape the character otherwise browser will think its HTML code-->
+      public children: List&lt;NaryTree&lt;T&gt;&gt; = new List(undefined),
+  ){}
+}
+
+// Example tree for you to print:
+let naryTree = new NaryTree(1,
+    new List([
+        new NaryTree(2),
+        new NaryTree(3,
+            new List([
+                new NaryTree(4),
+            ])),
+        new NaryTree(5)
+    ])
+)
+
+// Sample output:
+//1
+//-2
+//-3
+//--4
+//-5
+</code></pre>
+      <p>Again make sure that the indentation only indents by 1. This is what the test cases assume. Also make sure that `prettyPrintNaryTree` returns a List<[number, string]> type.</p>
+      </div>
+      <div id="exercise_6_suite" ></div>
+      <button class="collapsible"><h1>
+        Exercise 8: JSON pretty printer or N-ary tree with children styled based on their type
+      </h1></button>
+      <div class="content">
+      <p>
+        Lots of communication between servers and webpages happens using JSON. Often this JSON isn’t formatted and looks like a wall of text! Often we want to check the contents of the JSON wall of text and need a pretty printer. Quite a few websites exist to help beautify JSON text dumps:
+      </p>
+      <ul class="list">
+        <li><a href="https://jsonformatter.curiousconcept.com/">JSON Formatter and Validator</a></li>
+        <li><a href="http://jsonprettyprint.com/">JSON Pretty Print</a></li>
+        <li><a href="http://codebeautify.org/jsonviewer">JSON Viewer</a></li>
+        <li><i>The one you’re about to implement!</i></li>
+      </ul>
+      <p>
+        JSON (JavaScript Object Notation) is just a JavaScript object. A JavaScript object is just like a hashMap or dictionary in other languages.
+        <br>In previous exercises we’ve converted trees into a format that we can output! JSON is also just a tree, and there is an inbuilt function `JSON.parse` that helps us convert a JSON string into a JavaScript object.
+      </p>
+      <p>
+        JSON.parse takes a string as an argument, and returns the JavaScript object (named “any” in TypeScript”).
+      </p>
+      <pre><code>JSON.parse(text: string) => any</code></pre>
+      <p>
+        The structure of the JSON object can be found at this <a href="http://www.json.org/">site.</a>
+      </p>
+      <p>
+        JSON can be an array, object, number, string, boolean or null. Arrays can contain the listed types, and objects will always contain a key, value pair where the key is a string. The value can once again be any of the 6 types listed.
+        <br><task>Therefore we can write a function `jsonPrettyPrint` with the following type signature:</task>
+      </p>
+      <pre><code>jsonPrettyToDoc: (json: jsonTypes) => List<[number, string]></code></pre>
+      <p>where 'jsonTypes' is (note the use of recursive types): </p>
+      <pre><code>type jsonTypes = Array&ltjsonTypes&gt | { [key: string]: jsonTypes } | string | boolean | number | null</code></pre>
+      <p>
+        Keep in mind that JSON is very similar to the N-ary tree implemented above with the addition of type checking the node of the tree. Here’s some skeleton code to get you started:
+      </p>
+<pre><code>const jsonPrettyToDoc: (json: jsonTypes) => List<[number, string]> = json => {
+  if (Array.isArray(json)) {
+      // Handle the Array case.
+  } else if (typeof json === 'object' && json !== null) {
+      // Handle the object case.
+      // Hint: use Object.keys(json) to get a list of
+      // keys that the object has.
+  } else if (typeof json === 'string') {
+      // Handle string case.
+  } else if (typeof json === 'number') {
+      // Handle number
+  } else if (typeof json === 'boolean') {
+      // Handle the boolean case
+  } else if (typeof json === 'null') {
+      // Handle the null case
+  }
+
+  // Default case to fall back on.
+  return new List<[number, string]>([]);
+};
+</code></pre>
+      <p>
+        Some example output is shown in the <i>main.ts</i> file. The printing will handle formatting object key value pairs on the same line, so just start a new line for the value after the key and colon. The commas while printing are optional. However, you should handle the '[' and ']' for arrays and, the '{' and '}' for objects.
+      </p>
+      <p>
+        However, it is your job to make sure they are in the <i>List</i> class with the correct indentation and data.
+      </p>
+    </div>
+
+    </div>
+  </div>
+
+
+
+  <div id="mocha"></div>
+  <script src="./libs/mocha.js"></script>
+  <script src="./libs/chai.js"></script>
+  <script src="./libs/sinon.js"></script>
+
+  <script>
+  mocha.setup('bdd');
+  let expect = chai.expect;
+  </script>
+  <script src="./main.js"></script>
+  <script src="./test/main.test.js"></script>
+  <script>
+    mocha.checkLeaks();
+    mocha.run(() => { // run after tests are complete
+        // split the test report up and intersperse the results
+        // sections of the worksheet with id exercise_??_suite
+        const mochaReport = document.getElementById("mocha-report")
+        Array.from(mochaReport.children).forEach(element => {
+            const exerciseId = element.children[0].innerText,
+                exerciseTestResults = element.children[1],
+                resultsDiv = document.createElement("div")
+            resultsDiv.id = "mocha"
+            resultsDiv.className = "test"
+            const heading = document.createElement("h4")
+            heading.innerText = "Exercise Test Results:"
+            resultsDiv.appendChild(heading)
+            resultsDiv.appendChild(exerciseTestResults)
+            document.getElementById(exerciseId).appendChild(resultsDiv)
+        });
+        mochaReport.remove();
+
+        // persist vertical scroll position
+        const scrollY = sessionStorage.getItem("scrollY");
+        if (scrollY !== null) {
+            window.scroll(0, scrollY);
+        }
+        window.onunload = () => sessionStorage.setItem("scrollY", window.scrollY);
+    });
+
+    const collapsibles = Array.from(document.getElementsByClassName("collapsible"));
+    // get collapse status
+    const collapseStatus = sessionStorage.getItem("collapseStatus") ?
+            JSON.parse(sessionStorage.getItem("collapseStatus")) :
+            collapsibles.map(coll => coll.classList.contains("active"));
+
+    collapsibles.forEach((coll, i) => {
+      // expand if previously expanded
+      if (collapseStatus[i]) {
+        coll.classList.add("active");
+        const content = coll.nextElementSibling;
+        content.style.display = "block";
+      }
+
+      coll.addEventListener("click", function () {
+        this.classList.toggle("active")
+        collapseStatus[i] = !collapseStatus[i];
+        const content = this.nextElementSibling
+        content.style.display = collapseStatus[i] ? "block" : "none"
+        // save collapse status on change
+        sessionStorage.setItem("collapseStatus", JSON.stringify(collapseStatus));
+      });
+    });
+
+    // persist dark/light choice in localstorage
+    const checkbox = document.getElementById('light_vs_dark_toggle')
+    const darkCSS = localStorage.getItem("darkCSS") ? JSON.parse(localStorage.getItem("darkCSS")) : false;
+    if (darkCSS) {
+      checkbox.checked = true;
+    }
+
+    checkbox.addEventListener('change', (event) => {
+      const dark = event.target.checked
+      document.documentElement.setAttribute('data-theme', dark ? "dark" : "light")
+      localStorage.setItem("darkCSS", JSON.stringify(dark))
+    });
+
+  </script>
+</body>
+</html>
