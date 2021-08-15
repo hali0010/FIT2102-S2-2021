@@ -85,7 +85,6 @@ function map(f, l) {
 // Exercise 3: 
 // 
 function fromArray(arr) {
-    console.log(arr);
     return arr.length === 0 ? null : cons(arr[0], fromArray(arr.slice(1)));
 }
 // example use of reduce:
@@ -156,6 +155,7 @@ class List {
     }
     forEach(f) {
         forEach(f, this.head);
+        return this;
     }
 }
 /**
@@ -174,22 +174,24 @@ class BinaryTreeNode {
         this.rightChild = rightChild;
     }
 }
+//nest
+function nest(indent, l) {
+    return l.map(x => [x[0] + indent, x[1]]); // x[i].a +indent
+}
 // example tree:
 const myTree = new BinaryTreeNode(1, new BinaryTreeNode(2, new BinaryTreeNode(3)), new BinaryTreeNode(4));
 // *** uncomment the following code once you have implemented List and nest function (above) ***
-// function prettyPrintBinaryTree<T>(node: BinaryTree<T>): List<[number, string]> {
-//     if (!node) {
-//         return new List<[number, string]>([])
-//     }
-//     const thisLine = lineToList(line(node.data.toString())),
-//           leftLines = prettyPrintBinaryTree(node.leftChild),
-//           rightLines = prettyPrintBinaryTree(node.rightChild);
-//     return thisLine.concat(nest(1, leftLines.concat(rightLines)))
-// }
-// const output = prettyPrintBinaryTree(myTree)
-//                     .map(aLine => new Array(aLine[0] + 1).join('-') + aLine[1])
-//                     .reduce((a,b) => a + '\n' + b, '').trim();
-// console.log(output);
+function prettyPrintBinaryTree(node) {
+    if (!node) {
+        return new List([]);
+    }
+    const thisLine = lineToList(line(node.data.toString())), leftLines = prettyPrintBinaryTree(node.leftChild), rightLines = prettyPrintBinaryTree(node.rightChild);
+    return thisLine.concat(nest(1, leftLines.concat(rightLines)));
+}
+const output = prettyPrintBinaryTree(myTree)
+    .map(aLine => new Array(aLine[0] + 1).join('-') + aLine[1])
+    .reduce((a, b) => a + '\n' + b, '').trim();
+console.log(output);
 /**
  * Exercise 7:
  *  implement prettyPrintNaryTree, which takes a NaryTree as input
@@ -211,55 +213,68 @@ let naryTree = new NaryTree(1, new List([
 ]));
 // implement: function prettyPrintNaryTree(...)
 function prettyPrintNaryTree(node) {
-    return undefined;
+    if (!node) {
+        return new List([]);
+    }
+    const thisLine = lineToList(line(node.data.toString())), restOfLines = node.children.reduce((x, y) => x.concat(prettyPrintNaryTree(y)), new List([]));
+    return thisLine.concat(nest(1, restOfLines));
+    //convert node (NaryTree) to a List<[number,string]>
 }
+// *** uncomment the following code once you have implemented prettyPrintNaryTree (above) ***
+const outputNaryTree = prettyPrintNaryTree(naryTree)
+    .map(aLine => new Array(aLine[0] + 1).join('-') + aLine[1])
+    .reduce((a, b) => a + '\n' + b, '').trim();
+console.log(outputNaryTree);
 const jsonPrettyToDoc = json => {
     if (Array.isArray(json)) {
         // Handle the Array case.
+        return json.reduce((x, y) => x.concat(jsonPrettyToDoc(y)), new List([]));
     }
     else if (typeof json === 'object' && json !== null) {
         // Handle the object case.
         // Hint: use Object.keys(json) to get a list of
         // keys that the object has.
+        return Object.keys(json).reduce((x, y) => x.concat(jsonPrettyToDoc(y)), new List([]));
     }
     else if (typeof json === 'string') {
         // Handle string case.
+        return lineToList(line(json));
     }
     else if (typeof json === 'number') {
         // Handle number
+        return lineToList(line(json.toString()));
     }
     else if (typeof json === 'boolean') {
         // Handle the boolean case
+        return lineToList(line(json.toString()));
     }
     else if (json === null) {
         // Handle the null case
+        return lineToList([0, '']);
     }
     // Default case to fall back on.
     return new List([]);
 };
 // *** uncomment the following code once you are ready to test your implemented jsonPrettyToDoc ***
-// const json = {
-//     unit: "FIT2102",
-//     year: 2021,
-//     semester: "S2",
-//     active: true,
-//     assessments: {"week1": null as null, "week2": "Tutorial 1 Exercise", "week3": "Tutorial 2 Exercise"},
-//     languages: ["Javascript", "Typescript", "Haskell", "Minizinc"]
-// }
-//
-// function lineIndented(aLine: [number, string]): string {
-//     return new Array(aLine[0] + 1).join('    ') + aLine[1];
-// }
-//
-// function appendLine(acc: string, nextLine: string): string {
-//     return nextLine.slice(-1) === "," ? acc + nextLine.trim() :
-//            acc.slice(-1) === ":"      ? acc + " " + nextLine.trim() :
-//            acc + '\n' + nextLine;
-// }
-//
-// console.log(jsonPrettyToDoc(json)
-//               .map(lineIndented)
-//               .reduce(appendLine, '').trim());
+const json = {
+    unit: "FIT2102",
+    year: 2021,
+    semester: "S2",
+    active: true,
+    assessments: { "week1": null, "week2": "Tutorial 1 Exercise", "week3": "Tutorial 2 Exercise" },
+    languages: ["Javascript", "Typescript", "Haskell", "Minizinc"]
+};
+function lineIndented(aLine) {
+    return new Array(aLine[0] + 1).join('    ') + aLine[1];
+}
+function appendLine(acc, nextLine) {
+    return nextLine.slice(-1) === "," ? acc + nextLine.trim() :
+        acc.slice(-1) === ":" ? acc + " " + nextLine.trim() :
+            acc + '\n' + nextLine;
+}
+console.log(jsonPrettyToDoc(json)
+    .map(lineIndented)
+    .reduce(appendLine, '').trim());
 // *** This is what it should look like in the console ***
 // 
 // {
