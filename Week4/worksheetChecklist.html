@@ -1,0 +1,256 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Tutorial 4 Worksheet</title>
+  <script id="setTheme">
+    const dark = localStorage.getItem("darkCSS") ? JSON.parse(localStorage.getItem("darkCSS")) : false;
+    document.documentElement.setAttribute('data-theme', dark ? "dark" : "light")
+  </script>
+  <link id="style" href="./style.css" rel="stylesheet" />
+  <link href="./libs/mocha.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./libs/dracula.css">
+  <script src="./libs/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+  </script>
+  <script type="text/javascript" src="./libs/mathjax.js"></script>
+</head>
+<body>
+  <div class="sliderWrapper">
+    <div><p>Dark Mode&nbsp;&nbsp;</p></div>
+      <label class="switch">
+          <input type="checkbox" id="light_vs_dark_toggle">
+          <span class="slider"></span>
+      </label>
+  </div>
+
+  <div class="main-div">
+    <div class="description">
+      <h1>
+        Week 4 - Model infinite sequences
+      </h1>
+      <p><b>Intro:</b> remember <code>npm install</code> to set up node dependencies and then <code>npm run build</code> to generate the JavaScript for this page.
+        <br><b>Do not forget to change the noImplicitAny flag!</b>
+      <p>
+        Make sure you have read the <a href="https://tgdwyer.github.io/">course notes</a> before attempting this tute sheet.
+      </p>
+      <p>
+      This week we’re going to look at laziness. One of the best things about lazy iterators, is that you can define infinite sequences with them, and only use what’s needed. These techniques are especially useful when dealing with huge data sets in the real world (or other infinite sequences like user interaction with your program).
+      </p>
+      <p>
+      First you’ll start by implementing an infinite sequence initialisation function. This will be a generalisation of the natural numbers sequnce introduced in the notes. This function will become very useful as you use it to approximate Pi (𝜋=3.14159...), using techniques covered in the second week (closures) and third week (map, filter, reduce).
+      </p>
+      <p>
+      You’ll then implement Observables which you can listen to with an Observer! This opens up a paradigm of programming called <a href="https://tgdwyer.github.io/functionalreactiveprogramming/">Functional Reactive Programming</a>. An Observable allows a way to react to asynchronous data streams (keyboard presses, web-sockets, mouse moves, server requests).
+      </p>
+      <p>
+      You’ll then use your observable to add visualisations to the approximation of 𝜋 via Monte Carlo method!
+      </p>
+      <p>
+      There are several typescript files that you will work with in this week’s starter code.  You will complete:
+      </p>
+      <ul class="list">
+        <li>exercises 1-4 in `sequences.ts`</li>
+        <li>exercises 5-7 in `observableexamples.ts`</li>
+      </ul>
+      <p>
+        Tests are provided for exercises 1-4 in `worksheetChecklist.html`.
+      </p>
+      <p>
+        For exercises 5-7, please open `observableexamples.html` in your browser to watch them working. Their will be no automated testing for these questions. However, you should be able to watch your code in action!
+      </p>
+      <p>
+        In week 5 you will be marked on exercises 1-4.  Please start the remaining exercises as soon as possible, but we will not expect them to be complete until week 6. There will be additional questions to complete in Week 5, so do not leave it all to the last minute!
+      </p>
+      <h1>Outcomes</h1>
+      <ul class="list">
+        <li>Practice coding lazily and solving problems using laziness.</li>
+        <li>Build more familiarity with class syntax.</li>
+        <li>Method chaining as a way to make code clearer.</li>
+        <li>Revise referential transparency and function purity.</li>
+        <li>Functional Reactive Programming with Observables and <a href="https://rxjs.dev/">RxJS</a>.</li>
+      </ul>
+
+      <button class="collapsible"><h1>
+        Exercise 1 - Lazy Initialisation
+      </h1></button>
+      <div class="content">
+      <p>
+        Please implement a general purpose infinite sequence initialisation function! Question 7.4 in the notes. Make sure it passes the tests. It must also match the given type signature.
+        <br>Note: `LazySequence&lt;T&gt;` is defined in your code and in the notes.
+      </p>
+      </div>
+      <div id="exercise_1_suite" ></div>
+      <button class="collapsible"><h1>
+        Exercise 2 - Map, Filter, Take, Reduce
+      </h1></button>
+      <div class="content">
+      <p>
+        Still following the notes, please implement map, filter, take and reduce, making sure your functions match the given type signatures:
+      </p>
+      <pre><code>function map&lt;T&gt;(func: (v: T)=>T, seq: LazySequence&lt;T&gt;): LazySequence&lt;T&gt;
+function filter&lt;T&gt;(func: (v: T)=>boolean, seq: LazySequence&lt;T&gt;): LazySequence&lt;T&gt;
+function take&lt;T&gt;(amount: number, seq: LazySequence&lt;T&gt;): LazySequence&lt;T&gt; | undefined
+function reduce&lt;T,V&gt;(func: (v:V, t: T)=>V, seq: LazySequence&lt;T&gt;, start:V): V
+      </code></pre>
+      <p>
+        Take creates a sequence of finite length (terminated by undefined) from a longer or infinite sequence. Take returns a sequence that contains the specified number of elements of the sequence, and then 'undefined'. That is, the next attribute of the last element in the returned sequence, will be a function that returns 'undefined'
+      </p>
+    </div>
+      <div id="exercise_2_suite" ></div>
+      <button class="collapsible"><h1>
+        Exercise 3 - Reduce everything!
+      </h1></button>
+      <div class="content">
+      <p>
+        Reduce is an extremely powerful tool for any algorithm that requires a single traversal of a structure. Therefore, please implement three functions `maxNumber`, `lengthOfSequence` and `toArray`.
+      </p>
+        <p><b>
+          Use only reduce.
+        </b></p>
+      <p>
+      `maxNumber` should return the largest number in a lazy sequence.
+      <br>`lengthOfSequence` should return the length of the lazy sequence.
+      <br>`toArray` should convert a LazySequence to an array
+      </p>
+      <p>
+        If testing these yourself, make sure you wrap your lazy sequence in a `take` so that you don’t get trapped in infinite recursion.
+      </p>
+    </div>
+      <div id="exercise_3_suite" ></div>
+      <button class="collapsible"><h1>
+        Exercise 4 - Lazy Pi approximations
+      </h1></button>
+      <div class="content">
+      <p>
+        Using the lazy list, let’s approximate \(\frac{\pi}{4}\). This can be done by defining an infinite series that looks like so:
+        $$\frac{\pi}{4} = \frac{1}{1} - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + \frac{1}{9} ...$$
+        The series alternates between a plus and minus sign while the denominators are an ascending sequence of odd numbers starting from 1.
+      </p>
+      <p>
+        Write your solution into the function:
+      </p>
+      <pre><code>function exercise4Solution (seriesLength: number): number {
+    // Your solution using lazy lists.
+    // Use `take` to only take the right amount of the infinite list.
+};
+// Expect return of approximation of pi/4 based on the length of the series passed in.</code></pre>
+      <p>
+        This function should return whatever the approximation of \(\frac{\pi}{4}\) is for `seriesLength` elements of the series.
+      </p>
+      <p>
+        Some ideas for solving this:
+      </p>
+      <p>
+        <i>Technique 1</i> - Use reduce to accumulate the series.
+        <br>Generate a sequence of odd numbers with alternating signs. (+1, -3, +5, -7, ...)
+        <br>Use `take`, `reduce` and `map` to generate the approximation.
+      </p>
+      <p>
+        <i>Technique 2</i> - Accumulating iterator
+        <br>Another way is to create a generator that generates the approximation of \(\frac{\pi}{4}\):
+        <br>Hint 1: Use closures like in Week 2’s exercise 1.
+        <br>Hint 2: Does the order of arguments matter?
+        <br>BIGGER HINT: A fibonacci sequence that only returns a single number and stores state (It’s spoilers.) Highlight over it to see it:
+<pre style="color: transparent !important;">// First a naive iterator that simply passes all its arguments as a single tuple (pair).
+const fibGen = initSequence(([a, b]) => [b, a+b]);
+// How would you manipulate the function so that it can store state?
+// Fibonacci solution:
+const fibGen2 = () => initSequence((a => (b: number) => {
+  const c = a;
+  a = b;
+  b = c + a;
+  return b;
+})(0))(1)</pre>
+      <p>
+        Technique 3 - Whatever functional method you choose using an iterator.
+        <br>Whatever you choose, you’ll need to explain it to your demonstrator.
+      </p>
+    </div>
+      <div id="exercise_4_suite" ></div>
+
+    </div>
+  </div>
+
+
+
+  <div id="mocha"></div>
+  <script src="./libs/mocha.js"></script>
+  <script src="./libs/chai.js"></script>
+  <script src="./libs/sinon.js"></script>
+
+  <script>
+  mocha.setup('bdd');
+  let expect = chai.expect;
+  </script>
+  <script src="./dist/sequences.js"></script>
+  <script src="./test/main.test.js"></script>
+  <script>
+    mocha.checkLeaks();
+    mocha.run(() => { // run after tests are complete
+      // split the test report up and intersperse the results
+      // sections of the worksheet with id exercise_??_suite
+      const mochaReport = document.getElementById("mocha-report")
+      Array.from(mochaReport.children).forEach(element => {
+        const exerciseId = element.children[0].innerText,
+                exerciseTestResults = element.children[1],
+                resultsDiv = document.createElement("div")
+        resultsDiv.id = "mocha"
+        resultsDiv.className = "test"
+        const heading = document.createElement("h4")
+        heading.innerText = "Exercise Test Results:"
+        resultsDiv.appendChild(heading)
+        resultsDiv.appendChild(exerciseTestResults)
+        document.getElementById(exerciseId).appendChild(resultsDiv)
+      });
+      mochaReport.remove();
+
+      // persist vertical scroll position
+      const scrollY = sessionStorage.getItem("scrollY");
+      if (scrollY !== null) {
+        window.scroll(0, scrollY);
+      }
+      window.onunload = () => sessionStorage.setItem("scrollY", window.scrollY);
+    });
+
+    const collapsibles = Array.from(document.getElementsByClassName("collapsible"));
+    // get collapse status
+    const collapseStatus = sessionStorage.getItem("collapseStatus") ?
+            JSON.parse(sessionStorage.getItem("collapseStatus")) :
+            collapsibles.map(coll => coll.classList.contains("active"));
+
+    collapsibles.forEach((coll, i) => {
+      // expand if previously expanded
+      if (collapseStatus[i]) {
+        coll.classList.add("active");
+        const content = coll.nextElementSibling;
+        content.style.display = "block";
+      }
+
+      coll.addEventListener("click", function () {
+        this.classList.toggle("active")
+        collapseStatus[i] = !collapseStatus[i];
+        const content = this.nextElementSibling
+        content.style.display = collapseStatus[i] ? "block" : "none"
+        // save collapse status on change
+        sessionStorage.setItem("collapseStatus", JSON.stringify(collapseStatus));
+      });
+    });
+
+    // persist dark/light choice in localstorage
+    const checkbox = document.getElementById('light_vs_dark_toggle')
+    const darkCSS = localStorage.getItem("darkCSS") ? JSON.parse(localStorage.getItem("darkCSS")) : false;
+    if (darkCSS) {
+      checkbox.checked = true;
+    }
+
+    checkbox.addEventListener('change', (event) => {
+      const dark = event.target.checked
+      document.documentElement.setAttribute('data-theme', dark ? "dark" : "light")
+      localStorage.setItem("darkCSS", JSON.stringify(dark))
+    });
+
+  </script>
+</body>
+</html>

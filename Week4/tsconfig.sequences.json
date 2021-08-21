@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "watch": true,
+    "outDir": "./dist/"
+  },
+  "include": [
+    "./sequences.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "observableexamples.ts"
+  ]
+}

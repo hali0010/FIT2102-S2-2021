@@ -1,13 +1,11 @@
+// Surname     | Firstname | email | Contribution% | Any issues?
+// =============================================================
+// Hackwill    |Riley      |rhac0001@student.monash.edu| 25%           |
+// Ali         |Haider     |hali0010@student.monash.edu| 25%           |
+// Mark        |Stoeghofer |msto0012@student.monash.edu| 25%           |
+// Whittaker   |Finn       |fwhi0002@student.monash.edu| 25%           |
+//
 /*
-Complete the following table when you submit this file:
-
-Surname     | Firstname | email | Contribution% | Any issues?
-=============================================================
-Person 1... |           |       | 25%           |
-Person 2... |           |       | 25%           |
-Person 3... |           |       | 25%           |
-Person 4... |           |       | 25%           |
-
 complete Worksheet 3 by entering code in the places marked below...
 
 For instructions and tests open the file worksheetChecklist.html
@@ -238,7 +236,7 @@ const jsonPrettyToDoc = json => {
     }
     else if (typeof json === 'string') {
         // Handle string case.
-        return lineToList(line(json));
+        return lineToList(line(json + json.valueOf.toString()));
     }
     else if (typeof json === 'number') {
         // Handle number
@@ -246,7 +244,7 @@ const jsonPrettyToDoc = json => {
     }
     else if (typeof json === 'boolean') {
         // Handle the boolean case
-        return lineToList(line(json.toString()));
+        return lineToList(line(json.toString() + json.valueOf));
     }
     else if (json === null) {
         // Handle the null case

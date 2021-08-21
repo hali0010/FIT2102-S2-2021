@@ -1,0 +1,258 @@
+<html>
+
+<head>
+  <style>
+    /* @import url(style.css); */
+    p.highlight {
+      color: red;
+    }
+
+    svg {
+      background-color: beige;
+    }
+  </style>
+  <title>Observable Examples</title>
+  <script id="setTheme">
+    const dark = localStorage.getItem("darkCSS") ? JSON.parse(localStorage.getItem("darkCSS")) : false;
+    document.documentElement.setAttribute('data-theme', dark ? "dark" : "light")
+  </script>
+  <link id="style" href="./style.css" rel="stylesheet" />
+  <link href="./libs/mocha.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./libs/dracula.css">
+  <script src="./libs/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+  <script type="text/javascript" src="./libs/mathjax.js"></script>
+  <script src="./dist/examples.js"></script>
+
+  <!-- <script data-main="./observableexamples.js" src="./libs/require.js"></script> -->
+</head>
+
+<body>
+  <div class="sliderWrapper">
+    <div>
+      <p>Dark Mode&nbsp;&nbsp;</p>
+    </div>
+    <label class="switch">
+      <input type="checkbox" id="light_vs_dark_toggle">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="main-div">
+    <div class="description">
+      <h1>Basic Observable Examples</h1>
+      <p>
+        <task>Please read the Course Notes on <a
+            href="https://tgdwyer.github.io/functionalreactiveprogramming/">Functional Reactive Programming</a> before
+          attempting these exercises.</task>
+      </p>
+      <p><b>Intro:</b> remember <code>npm install</code> to set up node dependencies and then <code>npm run build</code>
+        to generate the JavaScript for this page.
+      </p>
+      <p> Below we have a simple demonstration of mouse events changing html text to show the coordinates of the mouse
+        pointer. Note that the text turns red if x>400.
+      </p>
+
+      <p id="pos">
+        0,0
+      </p>
+      <p> In <code>observableexamples.ts</code> you will find, in the function <code>mousePosEvents</code>,
+        a standard event handling approach to implement this behaviour. The function <code>mousePosObservable</code>
+        implements the identical behaviour using Observable.
+      </p>
+      <p>
+        <task>Confirm this by changing the call to mousePosEvents at the end of the file to instead call
+          mousePosObservable and compare the two implementations.</task>
+      </p>
+      <hr>
+      <button class="collapsible">
+        <h1>
+          Exercise 5 - Improving a Visualisation of a Monte Carlo approximation of Pi
+        </h1>
+      </button>
+      <div class="content">
+        <p>
+          This question and the next refer to observableexamples.ts.
+        </p>
+        <p>
+          You’re the newest hire on a data visualisation team that’s working on visualising the process of approximating
+          Pi using the Monte Carlo method. Congratulations!
+        </p>
+        <p>
+          Unfortunately most things haven’t been finished and you’ve volunteered to improve the demo! But first, what
+          the heck is a Monte Carlo method!?
+        </p>
+        <p>
+          The Monte Carlo method is used when a phenomena is easier to simulate than measure. Below we are going to
+          randomly place dots on a unit circle and tally up which dots hit the circle and which miss. This will
+          approximate (because we know the ratio between the circle and square).
+        </p>
+        <p>
+          Mathematically the area for a circle is $$\pi \times radius^2$$. Thus the area for a unit circle, or circle
+          with a radius of 1, is π. Let’s draw a square around the circle.
+        </p>
+        <p>
+          The side of the square is 2*radius and therefore the area of the square is equal to:
+          $$(2 radius) \times (2 radius) = 4 \times radius^2.$$
+
+          Therefore the ratio between the circle area and square area =
+          $$\frac{\textit{circle area}}{\textit{square area}} = \frac{pi \times radius^2}{4 \times radius^2} =
+          \frac{\pi}{4}$$
+
+          Thus the probability of a random point falling within the circle is π/4.
+          <br>Using this probability we can calculate pi!
+        </p>
+
+        $$\frac{\textit{points that fell within circle}}{\textit{total data point}} = \frac{\pi}{4}$$
+        $$\pi = 4 \times \frac{\textit{points that fell within circle}}{\textit{total data point}}$$
+        <p>
+          Below is a concrete example with 17 points.
+
+          <br>13 green points inside circle.
+          <br>4 purple points outside circle.
+          <br>17 total points.
+          $$\frac{\textit{points that fell within circle}}{\textit{total data point}} = \frac{13}{17} \times 4 \approx
+          \pi $$
+          $$ 3.05882 \approx \pi $$
+        </p>
+        <p>
+          There are two tasks which you have been hired to complete!
+          We already have a function 'createDot' and an observable stream of random numbers 'randomNumberStream'. You
+          need to extend the latter as described below.
+          Notice when you open `observableexamples.html` in the chrome browser that a circle is drawn to the screen.
+          This is where your visualisation of the Pi approximation process will appear.
+          Please complete the visualisation by drawing dots at the coordinates produced by the random number stream.
+          Points within the circle should be a different colour to those outside the circle. Note: the random x and y
+          coordinates are in the range -1 to 1.
+        </p>
+        <ul class="list">
+          <li>
+            <task>You will need to create a new subscription to the randomNumberStream to draw the dots, using the
+              “createDot” function.</task>
+          </li>
+          <li>The version of <code>createDot</code> you are given draws the dot at a hard-coded position. The SVG canvas
+            coordinate system is from 0,0 (top-left) to 300,300 (bottom-right).
+            <task>You will need to complete <code>createDot</code> to create the dot at the right position using
+              <code>circleRadius</code> to transform the coordinates to the canvas.</task>
+          </li>
+          <li>
+            <task>Use the <code>inCircle</code> function to colour the dots green or red depending on whether they are
+              inside the circle or out.</task>
+          </li>
+          <li>
+            <task>Use the random points from the stream to calculate a Pi approximation using the method above, and
+              place the result in the <code>resultInPage</code> element.</task>
+          </li>
+        </ul>
+        <p>Refer to the <a href="https://tgdwyer.github.io/functionalreactiveprogramming/">Observable Cheatsheet in
+            Functional Reactive Programming</a> and <a href="https://rxjs.dev/api">API Docs for RxJS</a></p>
+      </div>
+
+      <p>Pi approximation: <span id="value_piApproximation">...</span></p>
+      <svg id="piApproximationVis" width="300" , height="300" viewBox="0 0 300 300">
+        <rect x="0" y="0" width="300" height="300" fill="#dbedff" />
+        <circle cx="150" cy="150" r="150" fill="#b7dbff" />
+      </svg>
+      <hr>
+      <button class="collapsible">
+        <h1>
+          Exercise 6 - An Animated Rect
+        </h1>
+      </button>
+      <div class="content">
+        <p>We have provided you a function <code>animatedRectTimer</code> which animates a rectangle to move across the
+          screen smoothly for one second, using imperative constructs.
+          Your job is to achieve the same animated behaviour using observables.</p>
+        <p>
+          <task>
+            Complete the function <code>animateRect</code> and replace the call to <code>animatedRectTimer</code> (at
+            the end of the code file) with a call to your <code>animateRect</code>.
+          </task>
+        </p>
+        <p>Hint: Observable.subscribe return an unsubscribe function(as well as other things) which you will need to
+          use!</p>
+      </div>
+      <svg id="animatedRect" width="600" height="600" /></svg>
+      <hr>
+      <button class="collapsible">
+        <h1>
+          Exercise 7 - A movable rectangle
+        </h1>
+      </button>
+      <div class="content">
+        <p>So we have a rectangle moving which is nice. But lets make the rectangle controllable!</p>
+        <p>
+          <task>Your job is to make the rectangle controllable by keyboard input. </task>
+        </p>
+        <ul class="list">
+          <li>Either use 'AWSD' or the arrow keys. Have a look at the <a
+              href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent">KeyboardEvent properties</a>! </li>
+          <li>You must create four separate observable streams and then use <code>merge</code> to merge them into one to
+            control
+            the keyboard.
+            You should only have one subscribe call!</li>
+          <li>Try to avoid using if statements, think about what datatype we can use inside our observable (Hint: maybe
+            a function?!)</li>
+          <li>Don't know where to start? Have a look at <a
+              href="https://tgdwyer.github.io/functionalreactiveprogramming/">Functional Reactive Programming</a> again
+            for inspirations!</li>
+
+        </ul>
+      </div>
+      <svg id="moveableRect" width="600" height="600" /></svg>
+    </div>
+  </div>
+</body>
+
+<script>
+  // persist vertical scroll position
+  const scrollY = sessionStorage.getItem("scrollY");
+  if (scrollY !== null) {
+    window.scroll(0, scrollY);
+  }
+  window.onunload = () => sessionStorage.setItem("scrollY", window.scrollY);
+
+  const collapsibles = Array.from(document.getElementsByClassName("collapsible"));
+  // get collapse status
+  const collapseStatus = sessionStorage.getItem("collapseStatus") ?
+    JSON.parse(sessionStorage.getItem("collapseStatus")) :
+    collapsibles.map(coll => coll.classList.contains("active"));
+
+  collapsibles.forEach((coll, i) => {
+    // expand if previously expanded
+    if (collapseStatus[i]) {
+      coll.classList.add("active");
+      const content = coll.nextElementSibling;
+      content.style.display = "block";
+    }
+
+    coll.addEventListener("click", function () {
+      this.classList.toggle("active")
+      collapseStatus[i] = !collapseStatus[i];
+      const content = this.nextElementSibling
+      content.style.display = collapseStatus[i] ? "block" : "none"
+      // save collapse status on change
+      sessionStorage.setItem("collapseStatus", JSON.stringify(collapseStatus));
+    });
+  });
+
+  // persist dark/light choice in localstorage
+  const checkbox = document.getElementById('light_vs_dark_toggle')
+  const darkCSS = localStorage.getItem("darkCSS") ? JSON.parse(localStorage.getItem("darkCSS")) : false;
+  if (darkCSS) {
+    checkbox.checked = true;
+  }
+
+  checkbox.addEventListener('change', (event) => {
+    const dark = event.target.checked
+    document.documentElement.setAttribute('data-theme', dark ? "dark" : "light")
+    localStorage.setItem("darkCSS", JSON.stringify(dark))
+  });
+</script>
+
+</html>
