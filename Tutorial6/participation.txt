@@ -1,0 +1,7 @@
+// Surname     | Firstname | email | Contribution% | Any issues?
+// =============================================================
+// Hackwill    |Riley      |rhac0001@student.monash.edu| 35%           |
+// Ali         |Haider     |hali0010@student.monash.edu| 35%           |
+// Mark        |Stoeghofer |msto0012@student.monash.edu| -100%         |Didnt attend the tutorial or any of the meetings
+// Whittaker   |Finn       |fwhi0002@student.monash.edu| 30%           |
+//

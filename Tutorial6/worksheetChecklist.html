@@ -1,0 +1,296 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Tutorial 6 Worksheet</title>
+        <script id="setTheme">
+          const dark = localStorage.getItem("darkCSS") ? JSON.parse(localStorage.getItem("darkCSS")) : false;
+          document.documentElement.setAttribute('data-theme', dark ? "dark" : "light")
+        </script>
+      <link id="style" href="./style.css" rel="stylesheet" />        <link rel="stylesheet" href="./libs/dracula.css">
+        <script src="./libs/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+        </script>
+        <script type="text/javascript" async
+          src="./libs/mathjax.js">
+        </script>
+
+    </head>
+    <body>
+        <div class="sliderWrapper">
+            <div><p>Dark Mode&nbsp;&nbsp;</p></div>
+              <label class="switch">
+                  <input type="checkbox" id="light_vs_dark_toggle">
+                  <span class="slider"></span>
+              </label>
+          </div>
+        <div class="left-div">
+            <div class="description">
+                <h1>
+                    Week 6 - Discovering Haskell
+
+                </h1>
+                <h1>
+                    Preamble
+                </h1>
+                <p>
+                    Welcome to your week 6 tutorial, first in Haskell!  The goal of this session is to learn about the basic syntax of the language.  First of all you will need to install Haskell.  We will use the “stack” tools to install and build haskell.  There are installers for all major platforms.
+                </p><p>
+                    Stack creates a contained environment based on the information provided in the file stack.yaml, this allows you to work on multiple projects with different, and possibly conflicting, requirements at the same time.
+                </p><p>
+                    To test stack, from a command prompt in the home directory ( cmd.exe on windows, terminal on mac and linux) run:
+                </p><pre><code>$ stack new testproj
+$ cd testproj
+$ stack setup
+$ stack build</code></pre>
+                <p>
+                    The first time you run stack setup it will take a minute or so (it is installing a local version of GHC under C:\SR or ~/.stack ) – later invocations will use the cached version and will therefore be very quick.
+                </p><p>
+                    The default stack installation ( stack new ) will create a number of files in a project directory. The file stack.yaml contains build requirements, while testproj.cabal contains the code dependencies – external libraries and the like. The file you will have to worry about is src/Lib.hs where the logic resides, app/Main.hs is used to build an executable to run, and the test will not be used as of now.
+                </p>
+                <p>
+                    In addition, you can install Haskero extension in VS code. It is a full feature IDE for Haskell programming.
+                </p>
+                <p>
+                    For the Week 6 lab class, we have provided you with a stack project ready to go. The starter code is in src/week6 . There are three files in this directory: Pair.hs , List.hs, BinTree.hs and Examples.hs. Currently the functions in these files are left undefined. Your task is to complete the functions. So that the tests pass.
+                </p>
+                <p>
+                    After unzipping the folder, cd into it from the command line and run:
+                </p>
+                <pre><code>$ stack setup</code></pre>
+                <p>
+                If all goes well, after this step, your environment will be set up and you can start hacking. To run code within the environment, use:
+                </p>
+                <pre><code>$ stack ghci</code></pre>
+                <p>
+                    You should see something similar to:
+                </p>
+                <pre><code>$ stack ghci
+...
+[1 of 3] Compiling BinTree
+[2 of 3] Compiling Examples
+[3 of 3] Compiling IntPair
+[4 of 4] Compiling List
+Ok, four modules loaded.
+Loaded GHCi configuration from ...
+*List BinTree Examples IntPair List>
+                </code></pre>
+                <p>
+                    This is the Glasgow Haskell Compiler interactive interpreter, you will be able to load and run your code directly in there. This interactive console has tab completion, information on the code loaded, etc.
+                </p>
+                <p>
+                    For example, you should be able to create an IntPair from the REPL:
+                </p>
+                <pre><code>* Main BinTree List IntPair> IntPair 2 1
+IntPair 2 1</code></pre>
+                <p>
+                    Your code can be reloaded on the REPL using:
+                </p>
+                <pre><code>*List BinTree Examples IntPair List> :r </code></pre>
+                <p>
+                    To test functions defined with the same name in more than one module (e.g. there is a “size” function defined in both List and BinTree), you can either load only one module at a time, e.g.:
+                </p>
+                <pre><code>$ stack ghci src/week6/List.hs
+*List> size (List 3 [1,2,3] 1 3)
+3</code></pre>
+
+                <p>
+                    Or, dissambiguate by specifying the module name for the function:
+                </p>
+                <pre><code>*Main BinTree List IntPair> List.size (List 3 [1,2,3] 1 3)
+3</code></pre>
+                <p>
+                    If you still have problems, the tutors are there to help.
+                </p><p>
+                    In every file of the tutorial, you will see functions with a type signature and an undefined in the body, you need to replace this with your code.
+                </p><p>
+                    Comments starting with >>> are called doctests, to verify they work run:
+                </p>
+                <pre><code>$ stack test
+If your code is complete, they should all pass:
+Examples: 11  Tried: 11  Errors: 0  Failures: 0
+Examples: 10  Tried: 10  Errors: 0  Failures: 0
+Examples: 17  Tried: 17  Errors: 0  Failures: 0</code></pre>
+                <p>
+                    Otherwise you see an error and you still have work to do.
+                </p><p>
+                You can also run the tests for just one file at a time:
+                </p>
+                <pre><code>$ stack exec doctest src/week6/List.hs
+Examples: 10  Tried: 10  Errors: 0  Failures: 0</code></pre>
+              <p><b>Here are some handy GHCI commands:</b></p>
+              <ul class="list">
+                <li><b>:r</b> -reload files</li>
+                <li><b>:l</b> -load new file</li>
+                <li><b>:q</b> -quit. Using Ctrl+C on windows is buggy use this instead.</li>
+                <li><b>:h</b> -help</li>
+                <li><b>:i</b> -info. Similar to type (below), but also shows information about where it is defined and methods available if passed a class</li>
+                <li><b>:t</b> -type: Get the type of a function e.g.<pre><code>>:t map <br>map :: (a -> b) -> [a] -> [b]</code></pre></li>
+              </ul>
+                <button class="collapsible"><h1>
+                    Exercise 1: Pairs
+                </h1></button>
+                <div class="content">
+                    <p>
+                    An IntPair is a pair of two Int, that is two integer numbers.
+                    </p><p>
+                    Your goal is to use pattern matching to access the elements in a pair, or multiple pairs, in order to apply functions to them.
+                    </p>
+                </div>
+
+                <button class="collapsible"><h1>
+                    Exercise 2: Binary Tree
+                </h1></button>
+                <div class="content">
+                    <p>
+                    A BinTree is a recursive data structure, which means that each element in a binary tree is a binary tree. Each node in a binary tree is therefore either a Nil, or empty tree; or a Node . A Node has three elements:
+                    </p>
+                    <ol class="list">
+                        <li>an integer value</li>
+                        <li>left sub-tree;</li>
+                        <li>a right sub-tree;</li>
+                    </ol>
+                  <p>Your task is to write basic functions on a binary tree.</p>
+                </div>
+
+                <button class="collapsible"><h1>
+                    Exercise 3: List
+                </h1></button>
+                <div class="content">
+                    <p>
+                    A List is an extended container, implemented as a record, which holds information about its inner list:
+                    </p>
+                    <ul class="list">
+                        <li>size : the size of the list;</li>
+                        <li>elems : the actual list;</li>
+                        <li>low : the lowest element in the list;</li>
+                        <li>high : the highest element in the list.</li>
+                    </ul>
+                    <p>Your goal is to implement functions on this data structure while keeping the members up to date; e.g., if you add an element to the list, you have to update the size, and potentially the low or high members.
+                    </p>
+                </div>
+
+                <button class="collapsible"><h1>
+                    Exercise 4: Euler Problem 1
+                </h1></button>
+                <div class="content">
+                    <p>
+                        Our old friend is back! Please reimplement Euler Problem 1, you may need to use guards and recursion to accomplish this.
+                    </p><p>
+                    As a reminder:
+                        Project Euler Problem 1 reads:
+                    </p><p>
+                        "If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.<br>
+                        Find the sum of all the multiples of 3 or 5 below 1000."</i><br><br>
+                    </p>
+                </div>
+
+                <button class="collapsible"><h1>
+                    Exercise 5: Haskell Programming
+                </h1></button>
+                <div class="content">
+                    <p>
+                        Haskell comes with a very powerful in built library named 'Prelude', which has a whole bunch of useful functions. Some functions in the Prelude you will have to implement over the coming weeks.
+                    </p><p>
+                        However, it is also very useful to know how to explore the functions already use them to create some very useful functions!
+                        We will walk you through how to use <a href="https://hoogle.haskell.org/">hoogle</a> which is the haskell equivalent of google.
+                        In this example we will be makng a function <i>allEven</i> which takes in a list of integers and checks if all numbers are even.
+                    </p>
+                    <ul class="list">
+                        <li>The first thing we need is a function which check if a number is even. Lets not re-invent the wheel, we should try to use pre-written  functions as much as possible. So we will search <a href="https://hoogle.haskell.org/">hoogle</a> for the keyword 'even'. The first result is a function 'even' which takes an integral(similar to integers) and returns a Bool.
+                        We can use the interactive haskell terminal to ensure this function has the desired behaviour. Type in to your ghci instance 'even 4'. What does it return? How about for 'even 3'?
+                        <img src="./images/Even_1.png"><br><br>
+                        </li>
+                        <li>We know we now we can create this function with a combination of 'filter', 'map' and 'reduce'(How?) to solve this task.
+                            But lets check <a href="https://hoogle.haskell.org/">hoogle</a> if this can be achieved using a library function! So we have three types avaliable in this function right now:
+                            <pre><code>Input Type: [int]
+even function: (int -> Bool)
+Output Type: Bool</code></pre>Hoogle is a useful tool, because not only can we search keywords like above, but we can search for types! Lets search for a way to connect our known types.<br></li>
+                        <br><img src="./images/all.png"/>
+                        <p>The results of search for the type is shown above. We have two options 'all' or 'any'. Looking at the documentation we can see that 'all' is the funciton we want</p>
+                        <pre><code>allEvens l = all even l</code></pre>
+                        <p>So the funciton allEven is very similar to English! This is an example of very declerative code! Hoogle is a very useful search engine allowing you to easily traverse haskell functions!</p>
+                        <p>Now it is your go! These should all be short functions but its good to have some practice using hoogle! You should avoid hard coding recursion in these functions, if you do, you will lose marks! Please write:
+                        </p>
+                        <ul>
+                            <li><task>anyOdd: A function which finds out if any number is odd. </task>
+                                <ul>
+                                    <li>
+                                        Hint:
+                                        <span style="color: transparent !important;">Use the function you wrote before</span>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><task>sumTwoLists: Given two lists, sum them element by element. </task>
+                                <ul>
+                                    <li>
+                                        Hint:
+                                        <span style="color: transparent !important;">(+) is a function with type (Int -> Int -> Int)</span>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><task>firstItem: Given a list of tuples, return a new list such that the new list only contains the first item!</task>
+                                <ul>
+                                    <li>
+                                        Hint:
+                                        <span style="color: transparent !important;">Seems like you need a function that takes a tuple and returns the first element from the tuple.</span>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        </p>
+                    </ul>
+                </div>
+
+        </div>
+        </div>
+        <script>
+          // persist vertical scroll position
+          const scrollY = sessionStorage.getItem("scrollY");
+          if (scrollY !== null) {
+            window.scroll(0, scrollY);
+          }
+          window.onunload = () => sessionStorage.setItem("scrollY", window.scrollY);
+
+          const collapsibles = Array.from(document.getElementsByClassName("collapsible"));
+          // get collapse status
+          const collapseStatus = sessionStorage.getItem("collapseStatus") ?
+                  JSON.parse(sessionStorage.getItem("collapseStatus")) :
+                  collapsibles.map(coll => coll.classList.contains("active"));
+
+          collapsibles.forEach((coll, i) => {
+            // expand if previously expanded
+            if (collapseStatus[i]) {
+              coll.classList.add("active");
+              const content = coll.nextElementSibling;
+              content.style.display = "block";
+            }
+
+            coll.addEventListener("click", function () {
+              this.classList.toggle("active")
+              collapseStatus[i] = !collapseStatus[i];
+              const content = this.nextElementSibling
+              content.style.display = collapseStatus[i] ? "block" : "none"
+              // save collapse status on change
+              sessionStorage.setItem("collapseStatus", JSON.stringify(collapseStatus));
+            });
+          });
+
+          // persist dark/light choice in localstorage
+          const checkbox = document.getElementById('light_vs_dark_toggle')
+          const darkCSS = localStorage.getItem("darkCSS") ? JSON.parse(localStorage.getItem("darkCSS")) : false;
+          if (darkCSS) {
+            checkbox.checked = true;
+          }
+
+          checkbox.addEventListener('change', (event) => {
+            const dark = event.target.checked
+            document.documentElement.setAttribute('data-theme', dark ? "dark" : "light")
+            localStorage.setItem("darkCSS", JSON.stringify(dark))
+          });
+
+        </script>
+    </body>
+</html>

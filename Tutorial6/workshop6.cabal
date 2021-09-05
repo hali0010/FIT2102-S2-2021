@@ -1,0 +1,59 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 5840d21a3a341ea9560caa1cea8af85428c12991160aa9b5b580f6ff633f1db4
+
+name:           workshop6
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/intro#readme>
+homepage:       https://github.com/githubuser/intro#readme
+bug-reports:    https://github.com/githubuser/intro/issues
+author:         Arthur Mahéo
+maintainer:     arthur.maheo@monash.edu
+copyright:      2019 Arthur Mahéo
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/intro
+
+library
+  exposed-modules:
+      BinTree
+      Examples
+      IntPair
+      List
+  other-modules:
+      Paths_workshop6
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wextra -fprof-auto -fprof-cafs -g
+  build-depends:
+      base >=4.7 && <5
+  default-language: Haskell2010
+
+test-suite workshop6-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Watch
+      Paths_workshop6
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -with-rtsopts=-xc -with-rtsopts=-p
+  build-depends:
+      Glob
+    , QuickCheck
+    , ansi-terminal
+    , base >=4.7 && <5
+    , doctest
+    , fsnotify
+    , workshop6
+  default-language: Haskell2010

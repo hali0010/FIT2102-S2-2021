@@ -83,4 +83,6 @@ function exercise4Solution(seriesLength) {
 //     let oddNums = take(seriesLength, map(inverse,  map(neg,gen1)))
 //     return reduce(sum, oddNums, 0)
 // };
+const s1 = initSequence((x) => -(x + Math.sign(x)))(1), seq = map((x) => -x, s1);
+console.log(s1);
 //# sourceMappingURL=sequences.js.map
