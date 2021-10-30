@@ -1,0 +1,22 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "twentyone:lib"
+
+    - path: "./staticgame/Main.hs"
+      component: "twentyone:exe:staticgame"
+
+    - path: "./submission/Main.hs"
+      component: "twentyone:exe:staticgame"
+
+    - path: "./staticgame/Player.hs"
+      component: "twentyone:exe:staticgame"
+
+    - path: "./staticgame/Paths_twentyone.hs"
+      component: "twentyone:exe:staticgame"
+
+    - path: "./submission/Player.hs"
+      component: "twentyone:exe:staticgame"
+
+    - path: "./submission/Paths_twentyone.hs"
+      component: "twentyone:exe:staticgame"
